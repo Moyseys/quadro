@@ -2,7 +2,6 @@ package com.quadroapi.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseConnector {
@@ -11,19 +10,15 @@ public class DatabaseConnector {
   private static final String USER = "root";
   private static final String PASSWORD = "senhamysql";
 
+  private Connection conn;
+
   public Connection getConnection() throws SQLException {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
       System.out.println("Conexão bem sucedida com o banco de dados");
 
-      ResultSet tables = conn.createStatement().executeQuery("SHOW TABLES;");
-
-      while (tables.next()) {
-        String tableName = tables.getString(1);
-        System.out.println(tableName);
-      }
-
+      this.conn = conn;
       return conn;
     } catch (SQLException e) {
       System.out.println("Erro conexão");
@@ -31,5 +26,10 @@ public class DatabaseConnector {
     } catch (ClassNotFoundException e) {
       throw new SQLException("Driver JDBC não encontrado.", e);
     }
+  }
+
+  public void closeConnection() throws SQLException {
+    this.conn.close();
+    return;
   }
 }

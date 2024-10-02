@@ -13,7 +13,6 @@ public class PingController {
 
     } catch (Exception e) {
       e.printStackTrace();
-
     } finally {
       exchange.close();
     }

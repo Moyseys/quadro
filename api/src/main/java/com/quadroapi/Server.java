@@ -21,8 +21,6 @@ public class Server {
 
   public static void main(String[] args) throws IOException, SQLException {
     Server server = new Server();
-    DatabaseConnector db = new DatabaseConnector();
-    Connection conn = db.getConnection();
     server.initialize();
   }
 
@@ -34,9 +32,17 @@ public class Server {
   }
 
   private void configRoutes() {
-    // Configuração das rotas
-    PingRouter.initialize(this.server);
-    UsersRouter.initialize(this.server);
+    try {
+      DatabaseConnector db = new DatabaseConnector();
+      Connection conn;
+      conn = db.getConnection();
+
+      // Configuração das rotas
+      PingRouter.initialize(this.server);
+      UsersRouter.initialize(this.server, conn);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   private void configServer() throws IOException {
