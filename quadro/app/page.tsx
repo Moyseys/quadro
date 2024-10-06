@@ -18,12 +18,43 @@ import { useState } from "react"
 export default function index() {
 
   const [isVisible, setIsVisible] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      alert("Preencha todos os campos")
+      return
+    }
+
+    const url = "http://localhost:3005/token"
+
+    const response = fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem("token", data.token)
+          window.location.href = "/home"
+        } else {
+          alert(data.message)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   const toggleVisibility = () => {
     setIsVisible(true)
   }
   return (
-    <>
+    <div>
       <TitleRoute title="Logar-se" />
       <div className="flex align-center justify-center">
         <Card className="w-[500px]">
@@ -34,13 +65,14 @@ export default function index() {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="Email qual usou para se cadastrar" />
+              <Input id="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email qual usou para se cadastrar" />
             </div>
             <div className="space-y-1 relative">
               <Label htmlFor="password">Senha</Label>
             </div>
             <div className="relative">
               <Input
+                onChange={(e) => setPassword(e.target.value)}
                 type={isVisible ? "text" : "password"}
                 id="password"
                 placeholder="Sua senha"
@@ -62,16 +94,12 @@ export default function index() {
             <Link className="text-sm text-muted-foreground" href="/"> Esqueceu sua senha?</Link>
           </CardFooter>
           <CardFooter>
-            <Button asChild className="w-full">
-              <Link href={"/home"}>
-                Entrar
-              </Link>
-
+            <Button onClick={handleLogin} className="w-full">
+              Entrar
             </Button>
-
           </CardFooter>
         </Card>
       </div>
-    </>
+    </div>
   )
 }

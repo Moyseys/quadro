@@ -21,6 +21,14 @@ public class UsersService {
     }
   }
 
+  public User findByEmail(String email) {
+    try {
+      return this.userRepository.findByEmail(email);
+    } catch (Exception e) {
+      throw new RuntimeException("Erro ao encontrar usuário por email");
+    }
+  }
+
   public JSONArray userArrayToUserJson(User[] users) throws RuntimeException {
     try {
       JSONArray usersJson = new JSONArray();

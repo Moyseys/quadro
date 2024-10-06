@@ -63,13 +63,13 @@ export default function Join() {
 
         try {
             const body = JSON.stringify({
-                nome,
-                sobrenome,
-                email,
-                senha,
+                name: nome,
+                last_name: sobrenome,
+                email: email,
+                password: senha,
             })
 
-            const url = "https://webhook.site/43429fd2-579e-4dc5-a944-fc87af764b46"
+            const url = "http://localhost:3005/users"
 
             const response = await fetch(
                 url,
@@ -81,10 +81,14 @@ export default function Join() {
                     body: body,
                 },
             )
+            console.log(response)
+            const data = await response.json()
+            console.log(data)
 
-            if (response.status !== 200) {
-                setError("Algo deu errado")
-                toast.error("erro de requisição")
+            if (response.status !== 201) {
+                const msg = data?.msg
+                if (msg) return toast.error(`${msg}`)
+                toast.error("Algo deu errado, tente novamente mais tarde...")
                 return
             }
 
@@ -95,8 +99,6 @@ export default function Join() {
                 router.push("/")
             }, 2000)
 
-            const data = await response.json()
-            console.log(data)
         } catch (err) {
             console.log(err)
             setError("Erro na requisição")

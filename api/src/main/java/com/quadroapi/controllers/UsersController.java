@@ -1,6 +1,9 @@
 package com.quadroapi.controllers;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import netscape.javascript.JSObject;
+
 import com.quadroapi.models.Team;
 import com.quadroapi.models.User;
 
@@ -32,7 +35,6 @@ public class UsersController {
 
       // Transforemando json para string
       String responseUsers = usersJson.toString();
-      exchange.getResponseHeaders().set("Content-Type", "application/json");
       exchange.sendResponseHeaders(200, responseUsers.getBytes().length);
       exchange.getResponseBody().write(responseUsers.getBytes());
 
@@ -47,14 +49,28 @@ public class UsersController {
     try {
       String body = new String(exchange.getRequestBody().readAllBytes());
       JSONObject userJson = new JSONObject(body);
+      System.out.println(userJson);
+      if (!userJson.has("name") || userJson.getString("name").isEmpty() ||
+          !userJson.has("last_name") || userJson.getString("last_name").isEmpty() ||
+          !userJson.has("email") || userJson.getString("email").isEmpty() ||
+          !userJson.has("password") || userJson.getString("password").isEmpty()) {
+        JSONObject response = new JSONObject();
+        response.put("msg", "Valores do body inválidos");
+        exchange.sendResponseHeaders(400, 0);
+        exchange.getResponseBody().write(response.toString().getBytes());
+        exchange.getRequestBody().close();
+        return;
+      }
 
       User user = this.usersService.createUserFromJson(userJson);
       Boolean userExists = this.usersService.userExists(user.getEmail());
       if (userExists) {
-        exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(400, 0);
-        String response = "Usuário já existe";
-        exchange.getResponseBody().write(response.getBytes());
+        JSONObject response = new JSONObject();
+        response.put("msg", "Usuário já existe");
+
+        exchange.getResponseBody().write(response.toString().getBytes());
+        exchange.getRequestBody().close();
         return;
       }
 
@@ -66,10 +82,11 @@ public class UsersController {
 
       this.teamMemberService.linkUserToTeam(createdUser.getId(), createdTeam.getId());
 
-      exchange.getResponseHeaders().set("Content-Type", "application/json");
       exchange.sendResponseHeaders(201, 0);
-      String response = "Usuário criado com sucesso";
+      JSONObject response = new JSONObject();
+      response.put("msg", "Usuário criado com sucesso");
       exchange.getResponseBody().write(response.toString().getBytes());
+      exchange.getRequestBody().close();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

@@ -12,10 +12,11 @@ import com.quadroapi.database.DatabaseConnector;
 
 // Routers
 import com.quadroapi.routers.PingRouter;
+import com.quadroapi.routers.TokenRouter;
 import com.quadroapi.routers.UsersRouter;
 
 public class Server {
-  private int port = 8081;
+  private int port = 3005;
   private String host = "localhost";
   private HttpServer server;
 
@@ -40,6 +41,7 @@ public class Server {
       // Configuração das rotas
       PingRouter.initialize(this.server);
       UsersRouter.initialize(this.server, conn);
+      TokenRouter.initialize(this.server, conn);
     } catch (SQLException e) {
       e.printStackTrace();
     }

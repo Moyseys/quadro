@@ -16,6 +16,16 @@ public class UsersRouter {
     server.createContext("/users", (exchange) -> {
       String method = exchange.getRequestMethod();
 
+      exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+      exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+      exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      exchange.getResponseHeaders().set("Content-Type", "application/json");
+
+      if (method.equalsIgnoreCase("OPTIONS")) {
+        exchange.sendResponseHeaders(200, -1);
+        return;
+      }
+
       UserRepository userRepository = new UserRepository(conn);
       TeamRepository teamRepository = new TeamRepository(conn);
       TeamMemberRepository teamMemberRepository = new TeamMemberRepository(conn);
