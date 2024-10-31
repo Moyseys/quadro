@@ -6,6 +6,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+
 import org.json.JSONObject;
 
 import com.quadroapi.models.User;
@@ -43,9 +46,10 @@ public class TokenController {
         return;
       }
 
+      Key secretKey = Keys.hmacShaKeyFor("secret123".getBytes(StandardCharsets.UTF_8));
       String token = Jwts.builder()
           .setSubject(user.getEmail())
-          .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS256))
+          .signWith(secretKey)
           .compact();
 
       String response = new JSONObject().put("token", token).toString();

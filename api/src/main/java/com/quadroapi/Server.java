@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 //Database
 import com.quadroapi.database.DatabaseConnector;
-
+import com.quadroapi.routers.BalanceRouter;
 // Routers
 import com.quadroapi.routers.PingRouter;
 import com.quadroapi.routers.TokenRouter;
@@ -42,6 +42,7 @@ public class Server {
       PingRouter.initialize(this.server);
       UsersRouter.initialize(this.server, conn);
       TokenRouter.initialize(this.server, conn);
+      BalanceRouter.initialize(this.server, conn);
     } catch (SQLException e) {
       e.printStackTrace();
     }
