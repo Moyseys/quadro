@@ -81,11 +81,11 @@ public class UserRepository {
     ResultSet res = smt.executeQuery();
     if (res.next()) {
       return new User(
+          Integer.parseInt(res.getString("id")),
           res.getString("name"),
           res.getString("last_name"),
           res.getString("email"),
-          res.getString("password")
-      );
+          res.getString("password"));
     }
 
     return null;
