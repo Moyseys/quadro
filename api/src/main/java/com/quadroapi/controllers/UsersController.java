@@ -49,7 +49,6 @@ public class UsersController {
     try {
       String body = new String(exchange.getRequestBody().readAllBytes());
       JSONObject userJson = new JSONObject(body);
-      System.out.println(userJson);
       if (!userJson.has("name") || userJson.getString("name").isEmpty() ||
           !userJson.has("last_name") || userJson.getString("last_name").isEmpty() ||
           !userJson.has("email") || userJson.getString("email").isEmpty() ||

@@ -1,7 +1,9 @@
 package com.quadroapi.routers;
 
 import com.quadroapi.controllers.TokenController;
+import com.quadroapi.repositories.TeamRepository;
 import com.quadroapi.repositories.UserRepository;
+import com.quadroapi.services.TeamService;
 import com.quadroapi.services.UsersService;
 import com.sun.net.httpserver.HttpServer;
 import java.sql.Connection;
@@ -21,9 +23,11 @@ public class TokenRouter {
       }
 
       UserRepository userRepository = new UserRepository(conn);
+      TeamRepository teamRepository = new TeamRepository(conn);
       UsersService usersService = new UsersService(userRepository);
+      TeamService teamService = new TeamService(teamRepository);
 
-      TokenController tokenController = new TokenController(usersService);
+      TokenController tokenController = new TokenController(usersService, teamService);
 
       if (method.equals("POST")) {
         tokenController.createToken(exchange);

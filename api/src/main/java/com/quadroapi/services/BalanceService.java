@@ -18,10 +18,17 @@ public class BalanceService {
 
   public void createBalance(int team_id, int tag_id, double value) {
     try {
-      this.balanceRepository.createBalance(team_id, tag_id, value);
+      long createdAt = System.currentTimeMillis();
+      this.balanceRepository.createBalance(team_id, tag_id, value, createdAt);
       return;
     } catch (Exception e) {
-      throw new RuntimeException("Erro ao listar usuários");
+      System.out.println(e);
+      throw new RuntimeException("Erro ao criar extrato");
     }
+  }
+
+  public Balance[] listBalance(int teamId, int page, int limit) {
+    int offset = (page - 1) * limit;
+    return this.balanceRepository.listBalance(teamId, offset, limit);
   }
 }

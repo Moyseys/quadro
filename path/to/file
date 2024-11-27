@@ -1,0 +1,9 @@
+import org.json.JSONArray;
+
+public Team createTeam(Team team) throws SQLException {
+    ...
+}
+
+public UserTeamDTO getFirstTeamByUserId(int userId) throws SQLException {
+    ...
+} 

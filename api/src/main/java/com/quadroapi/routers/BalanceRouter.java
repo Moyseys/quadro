@@ -29,6 +29,8 @@ public class BalanceRouter {
 
       if (method.equals("POST")) {
         balanceController.createBalance(exchange);
+      } else if (method.equals("GET")) {
+        balanceController.listBalance(exchange);
       } else {
         exchange.sendResponseHeaders(405, -1);
       }

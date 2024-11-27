@@ -2,20 +2,59 @@ package com.quadroapi.models;
 
 public class Balance {
   private int id;
-  private int team_id;
+  private int teamId;
+  private int tagId;
   private double value;
-  private int tag_id;
+  private long createdAt;
 
-  public void Balance(int id, int team_id, double value, int tag_id) {
-    this.id = id;
-    this.team_id = team_id;
-    this.value = value;
-    this.tag_id = tag_id;
+  public Balance() {
   }
 
-  public void Balance(int team_id, double value, int tag_id) {
-    this.team_id = team_id;
+  public Balance(int id, int teamId, int tagId, double value, long createdAt) {
+    this.id = id;
+    this.teamId = teamId;
+    this.tagId = tagId;
     this.value = value;
-    this.tag_id = tag_id;
+    this.createdAt = createdAt;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getTeamId() {
+    return teamId;
+  }
+
+  public void setTeamId(int teamId) {
+    this.teamId = teamId;
+  }
+
+  public int getTagId() {
+    return tagId;
+  }
+
+  public void setTagId(int tagId) {
+    this.tagId = tagId;
+  }
+
+  public double getValue() {
+    return value;
+  }
+
+  public void setValue(double value) {
+    this.value = value;
+  }
+
+  public long getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(long createdAt) {
+    this.createdAt = createdAt;
   }
 }

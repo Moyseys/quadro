@@ -1,8 +1,12 @@
 package com.quadroapi.repositories;
 
+import java.security.DrbgParameters.Reseed;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.quadroapi.dtos.UserTeamDTO;
 
 public class TeamMemberRepository {
   private Connection conn;

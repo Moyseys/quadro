@@ -1,6 +1,7 @@
 package com.quadroapi.middlewares;
 
 import com.quadroapi.controllers.BaseController;
+import com.quadroapi.dtos.UserTeamDTO;
 import com.quadroapi.dtos.Token.TokenPayloadDto;
 import com.quadroapi.dtos.Token.TokenUserDataDto;
 import com.sun.net.httpserver.HttpExchange;
@@ -38,20 +39,26 @@ public class AuthorizationMiddleware extends BaseController implements HttpHandl
       if (token == null || token.isEmpty())
         throw new JwtException("");
 
-      Key secretKey = Keys.hmacShaKeyFor("secret123".getBytes(StandardCharsets.UTF_8));
+      Key secretKey = Keys
+          .hmacShaKeyFor("cXVhZHJvIG1lbGhvciBwcm9qZXRvIGRlc3NhIG1lcmRhIG7jbyB0ZW0gamVpdG8sIFNPQkVSQU5JQSBRVUFEUk8="
+              .getBytes(StandardCharsets.UTF_8));
       Claims decodedToken = Jwts.parserBuilder()
           .setSigningKey(secretKey)
           .build()
           .parseClaimsJws(token)
           .getBody();
 
-      int userId = Integer.parseInt(decodedToken.get("id", String.class));
+      int userId = decodedToken.get("id", Integer.class);
       String email = decodedToken.get("email", String.class);
+      int teamId = decodedToken.get("teamId", Integer.class);
+      String teamName = decodedToken.get("teamName", String.class);
+      String teamDescription = decodedToken.get("teamDescription", String.class);
 
-      TokenUserDataDto userData = new TokenUserDataDto(userId, email);
-
-      exchange.setAttribute(token, userData);
-      System.out.println("Token decodificado: " + userData);
+      exchange.setAttribute("userId", userId);
+      exchange.setAttribute("email", email);
+      exchange.setAttribute("teamId", teamId);
+      exchange.setAttribute("teamName", teamName);
+      exchange.setAttribute("teamDescription", teamDescription);
 
       this.nextHandler.handle(exchange);
     } catch (ExpiredJwtException e) {
@@ -61,9 +68,11 @@ public class AuthorizationMiddleware extends BaseController implements HttpHandl
     } catch (MalformedJwtException e) {
       this.setResponse(exchange, 400, "error", "Token malformado. O token é inválido.");
     } catch (JwtException e) {
-      this.setResponse(exchange, 400, "error", "Ocorreu um erro ao validar autenticação.");
+      System.out.println("Erro de JWT: " + e.getMessage());
+      this.setResponse(exchange, 500, "error", "Ocorreu um erro ao validar autenticação.");
     } catch (Exception e) {
-      this.setResponse(exchange, 400, "error", "Ocorreu um erro ao validar autenticação");
+      System.out.println("Erro inesperado: " + e.getMessage());
+      this.setResponse(exchange, 500, "error", "Ocorreu um erro ao validar autenticação");
     }
   }
 }
